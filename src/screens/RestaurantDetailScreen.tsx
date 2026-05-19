@@ -5,9 +5,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const menuItems = [
-  { id: "m1", name: "Chef's Special Combo", description: "Fresh signature patty, melted cheddar cheese, special house sauce, crispy gold fries, and a chilled drink.", price: 299 },
-  { id: "m2", name: "Double Cheese Supreme Pizza", description: "Rich marinara, mozzarella cheese pull, cheddar, parmesan drizzle, fresh Italian herbs.", price: 449 },
-  { id: "m3", name: "Choco Lava Molten Cake", description: "Hot molten chocolate core cake, dusted with powdered sweet sugar.", price: 120 },
+  { id: "m1", name: "Hyderabadi Dum Biryani", description: "Fragrant long grain basmati rice layered with spiced chicken, fried onions, and saffron.", price: 299 },
+  { id: "m2", name: "Butter Chicken Combo", description: "Creamy, rich tomato gravy with tender pieces of tandoori chicken, served with fresh butter naan.", price: 349 },
+  { id: "m3", name: "Paneer Tikka Roll", description: "Succulent paneer cubes marinated in spices, grilled to perfection, and wrapped in a fresh flatbread.", price: 189 },
+  { id: "m4", name: "Gulab Jamun Duo", description: "Two warm soft milk-solid dumplings dipped in cardamom scented rose water sugar syrup.", price: 99 },
 ];
 
 export default function RestaurantDetailScreen({
@@ -41,7 +42,7 @@ export default function RestaurantDetailScreen({
         {/* Restaurant Header */}
         <View style={styles.headerInfo}>
           <Text style={styles.title}>{name}</Text>
-          <Text style={styles.tags}>Premium Burgers • Desserts • Fast Delivery</Text>
+          <Text style={styles.tags}>North Indian • Mughlai • Authentic Biryani • Pure Desi Ghee</Text>
 
           <View style={styles.metaRow}>
             <View style={styles.metaItem}>

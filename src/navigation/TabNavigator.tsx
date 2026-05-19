@@ -33,12 +33,21 @@ export default function TabNavigator() {
             routeName === "RestaurantDetail" || routeName === "Cart"
               ? { display: "none" }
               : {
-                  borderTopWidth: 1,
-                  borderTopColor: "#E9ECEF",
-                  backgroundColor: "#FFFFFF",
-                  height: 60 + insets.bottom,
-                  paddingBottom: insets.bottom > 0 ? insets.bottom : 8,
-                  paddingTop: 8,
+                  position: "absolute",
+                  bottom: Math.max(insets.bottom, 16),
+                  left: 20,
+                  right: 20,
+                  borderRadius: 24,
+                  height: 72,
+                  paddingBottom: 12,
+                  paddingTop: 12,
+                  backgroundColor: "rgba(255, 255, 255, 0.98)",
+                  borderTopWidth: 0,
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 8 },
+                  shadowOpacity: 0.08,
+                  shadowRadius: 16,
+                  elevation: 8,
                 },
 
           tabBarIcon: ({ color, size }) => {

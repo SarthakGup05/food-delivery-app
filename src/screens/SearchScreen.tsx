@@ -3,13 +3,13 @@ import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity } from 
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const popularSearches = ["Pizza", "Burgers", "Salad", "Momos", "Shakes", "Biryani"];
+const popularSearches = ["Biryani", "Butter Chicken", "Paneer Tikka", "Momos", "Samosa", "Masala Dosa"];
 
 const mockFoodItems = [
-  { id: "1", name: "Supreme Veggie Pizza", restaurant: "Pizza Hub", price: 349, rating: "4.7" },
-  { id: "2", name: "Classic Crispy Burger", restaurant: "Burger Palace", price: 199, rating: "4.8" },
-  { id: "3", name: "Healthy Caesar Salad", restaurant: "Healthy Salad Bar", price: 220, rating: "4.9" },
-  { id: "4", name: "Garlic Breadsticks", restaurant: "Pizza Hub", price: 120, rating: "4.5" },
+  { id: "1", name: "Hyderabadi Dum Biryani", restaurant: "Biryani Blues", price: 299, rating: "4.5" },
+  { id: "2", name: "Butter Chicken", restaurant: "Haldiram's", price: 349, rating: "4.3" },
+  { id: "3", name: "Paneer Tikka Roll", restaurant: "Haldiram's", price: 189, rating: "4.3" },
+  { id: "4", name: "Masala Dosa Classic", restaurant: "The Dosa Factory", price: 149, rating: "4.7" },
 ];
 
 export default function SearchScreen() {
