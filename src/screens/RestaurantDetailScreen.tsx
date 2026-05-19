@@ -1,18 +1,53 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { useContext } from "react";
 
-export default function RestaurantDetailScreen() {
+import {
+  View,
+  Text,
+  Button,
+} from "react-native";
+
+import { CartContext } from "../context/CartContext";
+
+export default function RestaurantDetailScreen({
+  route,
+  navigation,
+}: {
+  route: any;
+  navigation: any;
+}) {
+  const { addToCart } = useContext(CartContext);
+
+  const { name, price } = route.params;
+
   return (
-    <View style={styles.container}>
-      <Text>RestaurantDetailScreen</Text>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Text style={{ fontSize: 28 }}>
+        {name}
+      </Text>
+
+      <Text style={{ fontSize: 22 }}>
+        ₹{price}
+      </Text>
+
+      <Button
+        title="Add To Cart"
+        onPress={() => {
+          addToCart({ name, price });
+
+          navigation.navigate("Cart");
+        }}
+      />
+
+      <Button
+        title="Go Back"
+        onPress={() => navigation.goBack()}
+      />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
