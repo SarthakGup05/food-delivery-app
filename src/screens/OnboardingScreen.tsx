@@ -15,7 +15,7 @@ export default function OnboardingScreen({ navigation }: { navigation: any }) {
 
       <Button
         title="Get Started"
-        onPress={() => navigation.navigate("Login")}
+        onPress={() => navigation.replace("Login")}
       />
     </View>
   );

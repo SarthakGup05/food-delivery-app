@@ -17,7 +17,11 @@ export default function RestaurantDetailScreen({
 }) {
   const { addToCart } = useContext(CartContext);
 
-  const { name, price } = route.params;
+  const {
+    id,
+    name = "Restaurant",
+    price = 0,
+  } = route.params || {};
 
   return (
     <View

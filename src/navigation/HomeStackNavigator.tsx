@@ -15,6 +15,7 @@ export default function HomeStackNavigator() {
         },
         headerTintColor: "#fff",
         animation: "slide_from_right",
+        animationDuration: 300,
       }}
     >
       <Stack.Screen

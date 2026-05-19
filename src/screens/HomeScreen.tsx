@@ -23,7 +23,12 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
             backgroundColor: "#fff",
             padding: 20,
             marginBottom: 15,
-            borderRadius: 10,
+            borderRadius: 16,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 4,
           }}
           onPress={() =>
             navigation.navigate("RestaurantDetail", {
