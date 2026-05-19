@@ -17,6 +17,7 @@ export default function ProfileDrawerNavigator() {
 
   return (
     <Drawer.Navigator
+      screenOptions={{ headerShown: false }}
       drawerContent={(props: any) => (
         <CustomDrawerContent {...props} />
       )}

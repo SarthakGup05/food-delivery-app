@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import HomeStackNavigator from "./HomeStackNavigator";
 
@@ -17,51 +18,58 @@ const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
   const { cart } = useContext(CartContext);
+  const insets = useSafeAreaInsets();
 
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerShown: false,
+      screenOptions={({ route }) => {
+        const routeName = getFocusedRouteNameFromRoute(route) ?? route.name;
 
-        tabBarIcon: ({ color, size }) => {
-          let iconName;
+        return {
+          headerShown: false,
+          tabBarActiveTintColor: "#E23E3E",
+          tabBarInactiveTintColor: "#8E8E93",
+          tabBarStyle:
+            routeName === "RestaurantDetail" || routeName === "Cart"
+              ? { display: "none" }
+              : {
+                  borderTopWidth: 1,
+                  borderTopColor: "#E9ECEF",
+                  backgroundColor: "#FFFFFF",
+                  height: 60 + insets.bottom,
+                  paddingBottom: insets.bottom > 0 ? insets.bottom : 8,
+                  paddingTop: 8,
+                },
 
-          if (route.name === "HomeTab") {
-            iconName = "home";
-          } else if (route.name === "Search") {
-            iconName = "search";
-          } else if (route.name === "Orders") {
-            iconName = "receipt";
-          } else if (route.name === "Profile") {
-            iconName = "person";
-          }
+          tabBarIcon: ({ color, size }) => {
+            let iconName;
 
-          return (
-            <Ionicons
-              name={iconName as any}
-              size={size}
-              color={color}
-            />
-          );
-        },
-      })}
+            if (route.name === "HomeTab") {
+              iconName = "home";
+            } else if (route.name === "Search") {
+              iconName = "search";
+            } else if (route.name === "Orders") {
+              iconName = "receipt";
+            } else if (route.name === "Profile") {
+              iconName = "person";
+            }
+
+            return (
+              <Ionicons
+                name={iconName as any}
+                size={size}
+                color={color}
+              />
+            );
+          },
+        };
+      }}
     >
       <Tab.Screen
         name="HomeTab"
         component={HomeStackNavigator}
-        options={({ route }) => {
-          const routeName =
-            getFocusedRouteNameFromRoute(route) ?? "Home";
-
-          return {
-            title: "Home",
-
-            tabBarStyle:
-              routeName === "RestaurantDetail" ||
-              routeName === "Cart"
-                ? { display: "none" }
-                : undefined,
-          };
+        options={{
+          title: "Home",
         }}
       />
 
@@ -74,8 +82,7 @@ export default function TabNavigator() {
         name="Orders"
         component={OrdersScreen}
         options={{
-          tabBarBadge:
-            cart.length > 0 ? cart.length : null,
+          tabBarBadge: cart.length > 0 ? cart.length : null,
         }}
       />
 
