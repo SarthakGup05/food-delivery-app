@@ -1,18 +1,14 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { useContext } from "react";
+
+import { AuthContext } from "../context/AuthContext";
+
+import AuthNavigator from "./AuthNavigator";
+import TabNavigator from "./TabNavigator";
 
 export default function RootNavigator() {
-  return (
-    <View style={styles.container}>
-      <Text>RootNavigator</Text>
-    </View>
-  );
-}
+  const { isAuthenticated } = useContext(AuthContext);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+  return isAuthenticated
+    ? <TabNavigator />
+    : <AuthNavigator />;
+}

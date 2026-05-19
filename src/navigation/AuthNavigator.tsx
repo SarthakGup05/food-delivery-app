@@ -1,18 +1,22 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import OnboardingScreen from "../screens/OnboardingScreen";
+import LoginScreen from "../screens/LoginScreen";
+
+const Stack = createNativeStackNavigator();
 
 export default function AuthNavigator() {
   return (
-    <View style={styles.container}>
-      <Text>AuthNavigator</Text>
-    </View>
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Onboarding"
+        component={OnboardingScreen}
+      />
+
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+      />
+    </Stack.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
