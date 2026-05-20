@@ -3,6 +3,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import RootNavigator from "../navigation/RootNavigator";
 import { AuthProvider } from "../context/AuthContext";
 import { CartProvider } from "../context/CartContext";
+import { ThemeProvider } from "../context/ThemeContext";
 
 const linking: any = {
   prefixes: ["foodapp://"],
@@ -21,13 +22,15 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <AuthProvider>
-        <CartProvider>
-          <NavigationIndependentTree>
-            <NavigationContainer linking={linking}>
-              <RootNavigator />
-            </NavigationContainer>
-          </NavigationIndependentTree>
-        </CartProvider>
+        <ThemeProvider>
+          <CartProvider>
+            <NavigationIndependentTree>
+              <NavigationContainer linking={linking}>
+                <RootNavigator />
+              </NavigationContainer>
+            </NavigationIndependentTree>
+          </CartProvider>
+        </ThemeProvider>
       </AuthProvider>
     </SafeAreaProvider>
   );
