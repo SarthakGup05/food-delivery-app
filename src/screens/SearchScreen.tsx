@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useAppTheme } from "../context/ThemeContext";
 
 const popularSearches = ["Biryani", "Butter Chicken", "Paneer Tikka", "Momos", "Samosa", "Masala Dosa"];
 
@@ -15,6 +16,7 @@ const mockFoodItems = [
 export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const insets = useSafeAreaInsets();
+  const { colors, isDark } = useAppTheme();
 
   const filteredItems = mockFoodItems.filter((item) =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -22,21 +24,21 @@ export default function SearchScreen() {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Search Header */}
-      <View style={[styles.header, { paddingTop: Math.max(insets.top, 15) }]}>
-        <View style={styles.searchBar}>
-          <Ionicons name="search" size={20} color="#888888" style={{ marginRight: 8 }} />
+      <View style={[styles.header, { backgroundColor: colors.card, borderBottomColor: colors.border, paddingTop: Math.max(insets.top, 15) }]}>
+        <View style={[styles.searchBar, { backgroundColor: colors.inputBg }]}>
+          <Ionicons name="search" size={20} color={colors.textSecondary} style={{ marginRight: 8 }} />
           <TextInput
             placeholder="Search food or restaurant..."
-            style={styles.input}
+            style={[styles.input, { color: colors.text }]}
             value={searchQuery}
             onChangeText={setSearchQuery}
-            placeholderTextColor="#AAAAAA"
+            placeholderTextColor={isDark ? "#8E8EAE" : "#AAAAAA"}
           />
           {searchQuery !== "" && (
             <TouchableOpacity onPress={() => setSearchQuery("")}>
-              <Ionicons name="close-circle" size={20} color="#888888" />
+              <Ionicons name="close-circle" size={20} color={colors.textSecondary} />
             </TouchableOpacity>
           )}
         </View>
@@ -45,55 +47,55 @@ export default function SearchScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {searchQuery === "" ? (
           <View>
-            <Text style={styles.sectionTitle}>Popular Searches</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Popular Searches</Text>
             <View style={styles.tagsContainer}>
               {popularSearches.map((tag, idx) => (
                 <TouchableOpacity
                   key={idx}
-                  style={styles.tag}
+                  style={[styles.tag, { backgroundColor: colors.card, borderColor: colors.border }]}
                   onPress={() => setSearchQuery(tag)}
                 >
-                  <Text style={styles.tagText}>{tag}</Text>
+                  <Text style={[styles.tagText, { color: colors.textSecondary }]}>{tag}</Text>
                 </TouchableOpacity>
               ))}
             </View>
 
             <View style={styles.recentTitleRow}>
-              <Text style={styles.sectionTitle}>Featured Items</Text>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>Featured Items</Text>
             </View>
             {mockFoodItems.map((item) => (
-              <View key={item.id} style={styles.resultCard}>
+              <View key={item.id} style={[styles.resultCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
                 <View style={styles.resultLeft}>
-                  <Text style={styles.itemName}>{item.name}</Text>
-                  <Text style={styles.restaurantName}>{item.restaurant}</Text>
+                  <Text style={[styles.itemName, { color: colors.text }]}>{item.name}</Text>
+                  <Text style={[styles.restaurantName, { color: colors.textSecondary }]}>{item.restaurant}</Text>
                   <Text style={styles.itemPrice}>₹{item.price}</Text>
                 </View>
-                <View style={styles.resultRight}>
+                <View style={[styles.resultRight, { backgroundColor: isDark ? "#242630" : "#FFF8F8" }]}>
                   <Ionicons name="star" size={14} color="#FFC107" style={{ marginRight: 3 }} />
-                  <Text style={styles.ratingText}>{item.rating}</Text>
+                  <Text style={[styles.ratingText, { color: colors.text }]}>{item.rating}</Text>
                 </View>
               </View>
             ))}
           </View>
         ) : (
           <View>
-            <Text style={styles.sectionTitle}>Search Results ({filteredItems.length})</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Search Results ({filteredItems.length})</Text>
             {filteredItems.length === 0 ? (
               <View style={styles.noResultsContainer}>
-                <Ionicons name="search-outline" size={60} color="#6C757D" style={{ marginBottom: 12 }} />
-                <Text style={styles.noResultsText}>No results found for "{searchQuery}"</Text>
+                <Ionicons name="search-outline" size={60} color={colors.textSecondary} style={{ marginBottom: 12 }} />
+                <Text style={[styles.noResultsText, { color: colors.textSecondary }]}>No results found for "{searchQuery}"</Text>
               </View>
             ) : (
               filteredItems.map((item) => (
-                <View key={item.id} style={styles.resultCard}>
+                <View key={item.id} style={[styles.resultCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
                   <View style={styles.resultLeft}>
-                    <Text style={styles.itemName}>{item.name}</Text>
-                    <Text style={styles.restaurantName}>{item.restaurant}</Text>
+                    <Text style={[styles.itemName, { color: colors.text }]}>{item.name}</Text>
+                    <Text style={[styles.restaurantName, { color: colors.textSecondary }]}>{item.restaurant}</Text>
                     <Text style={styles.itemPrice}>₹{item.price}</Text>
                   </View>
-                  <View style={styles.resultRight}>
+                  <View style={[styles.resultRight, { backgroundColor: isDark ? "#242630" : "#FFF8F8" }]}>
                     <Ionicons name="star" size={14} color="#FFC107" style={{ marginRight: 3 }} />
-                    <Text style={styles.ratingText}>{item.rating}</Text>
+                    <Text style={[styles.ratingText, { color: colors.text }]}>{item.rating}</Text>
                   </View>
                 </View>
               ))
