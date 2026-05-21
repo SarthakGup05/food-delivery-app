@@ -57,11 +57,13 @@ export const ThemeContext = createContext({
   toggleTheme: () => {},
   colors: lightTheme.colors,
   themeProgress: { value: 0 } as any,
+  tabBarTranslateY: { value: 0 } as any,
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [isDark, setIsDark] = useState(false);
   const themeProgress = useSharedValue(0);
+  const tabBarTranslateY = useSharedValue(0);
 
   const toggleTheme = () => {
     setIsDark((prev) => {
@@ -74,7 +76,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const colors = isDark ? darkTheme.colors : lightTheme.colors;
 
   return (
-    <ThemeContext.Provider value={{ isDark, toggleTheme, colors, themeProgress }}>
+    <ThemeContext.Provider value={{ isDark, toggleTheme, colors, themeProgress, tabBarTranslateY }}>
       {children}
     </ThemeContext.Provider>
   );
