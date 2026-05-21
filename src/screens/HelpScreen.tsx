@@ -2,19 +2,21 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { useAppTheme } from "../context/ThemeContext";
 
 export default function HelpScreen() {
   const insets = useSafeAreaInsets();
+  const { colors } = useAppTheme();
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Help & Support</Text>
+    <View style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
+      <View style={[styles.header, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
+        <Text style={[styles.title, { color: colors.text }]}>Help & Support</Text>
       </View>
       <View style={styles.content}>
-        <Ionicons name="help-circle-outline" size={80} color="#E23E3E" style={{ marginBottom: 16 }} />
-        <Text style={styles.subtitle}>How can we help?</Text>
-        <Text style={styles.description}>Connect with our 24/7 food delivery customer support representatives or browse standard help documents.</Text>
+        <Ionicons name="help-circle-outline" size={80} color="#FF6B35" style={{ marginBottom: 16 }} />
+        <Text style={[styles.subtitle, { color: colors.text }]}>How can we help?</Text>
+        <Text style={[styles.description, { color: colors.textSecondary }]}>Connect with our 24/7 food delivery customer support representatives or browse standard help documents.</Text>
       </View>
     </View>
   );

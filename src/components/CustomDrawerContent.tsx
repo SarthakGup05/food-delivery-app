@@ -8,10 +8,13 @@ import {
   Text,
   Image,
 } from "react-native";
+import { useAppTheme } from "../context/ThemeContext";
 
 export default function CustomDrawerContent(props: any) {
+  const { colors } = useAppTheme();
+
   return (
-    <DrawerContentScrollView {...props}>
+    <DrawerContentScrollView {...props} style={{ backgroundColor: colors.background }}>
       <View
         style={{
           padding: 20,
@@ -34,6 +37,7 @@ export default function CustomDrawerContent(props: any) {
           style={{
             fontSize: 20,
             fontWeight: "bold",
+            color: colors.text,
           }}
         >
           Sarthak Gupta

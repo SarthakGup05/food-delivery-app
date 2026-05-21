@@ -2,19 +2,21 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { useAppTheme } from "../context/ThemeContext";
 
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
+  const { colors } = useAppTheme();
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Settings</Text>
+    <View style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
+      <View style={[styles.header, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
+        <Text style={[styles.title, { color: colors.text }]}>Settings</Text>
       </View>
       <View style={styles.content}>
-        <Ionicons name="settings-outline" size={80} color="#E23E3E" style={{ marginBottom: 16 }} />
-        <Text style={styles.subtitle}>App Settings</Text>
-        <Text style={styles.description}>Manage preferences, localized notifications, account settings, and security credentials.</Text>
+        <Ionicons name="settings-outline" size={80} color="#FF6B35" style={{ marginBottom: 16 }} />
+        <Text style={[styles.subtitle, { color: colors.text }]}>App Settings</Text>
+        <Text style={[styles.description, { color: colors.textSecondary }]}>Manage preferences, localized notifications, account settings, and security credentials.</Text>
       </View>
     </View>
   );
