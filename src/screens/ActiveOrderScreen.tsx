@@ -215,12 +215,12 @@ export default function ActiveOrderScreen({ route, navigation }: { route: any; n
         <Animated.View entering={FadeInDown.delay(200).springify()} style={[styles.mapCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <Text style={[styles.mapTitle, { color: colors.text }]}>Live Delivery Route</Text>
           
-          <View style={styles.mapContainer}>
+          <View style={[styles.mapContainer, { backgroundColor: isDark ? "#12131A" : "#F1F5F9" }]}>
             {/* Draw abstract grid lines */}
-            <View style={[styles.mapGridLineH1, { opacity: isDark ? 0.08 : 0.03 }]} />
-            <View style={[styles.mapGridLineH2, { opacity: isDark ? 0.08 : 0.03 }]} />
-            <View style={[styles.mapGridLineV1, { opacity: isDark ? 0.08 : 0.03 }]} />
-            <View style={[styles.mapGridLineV2, { opacity: isDark ? 0.08 : 0.03 }]} />
+            <View style={[styles.mapGridLineH1, { backgroundColor: isDark ? "rgba(255, 255, 255, 0.12)" : "rgba(0,0,0,0.04)", opacity: isDark ? 0.8 : 0.3 }]} />
+            <View style={[styles.mapGridLineH2, { backgroundColor: isDark ? "rgba(255, 255, 255, 0.12)" : "rgba(0,0,0,0.04)", opacity: isDark ? 0.8 : 0.3 }]} />
+            <View style={[styles.mapGridLineV1, { backgroundColor: isDark ? "rgba(255, 255, 255, 0.12)" : "rgba(0,0,0,0.04)", opacity: isDark ? 0.8 : 0.3 }]} />
+            <View style={[styles.mapGridLineV2, { backgroundColor: isDark ? "rgba(255, 255, 255, 0.12)" : "rgba(0,0,0,0.04)", opacity: isDark ? 0.8 : 0.3 }]} />
 
             {/* Dotted Tracking Route Line */}
             <View style={styles.routePathContainer}>
@@ -247,7 +247,7 @@ export default function ActiveOrderScreen({ route, navigation }: { route: any; n
           </View>
           
           {/* Live Dynamic Dashboard Stats Row */}
-          <View style={styles.liveDashboardRow}>
+          <View style={[styles.liveDashboardRow, { backgroundColor: colors.inputBg, borderColor: colors.border }]}>
             <View style={styles.liveStatCol}>
               <Ionicons name="speedometer-outline" size={16} color="#FF6B35" />
               <View style={{ marginLeft: 6 }}>
@@ -255,7 +255,7 @@ export default function ActiveOrderScreen({ route, navigation }: { route: any; n
                 <Text style={[styles.liveStatValue, { color: colors.text }]}>{liveSpeed} km/h</Text>
               </View>
             </View>
-            <View style={[styles.liveStatCol, styles.liveStatColBorder, { borderLeftColor: colors.border }]}>
+            <View style={[styles.liveStatCol, styles.liveStatColBorder, { borderColor: colors.border }]}>
               <Ionicons name="map-outline" size={16} color="#FF6B35" />
               <View style={{ marginLeft: 6 }}>
                 <Text style={[styles.liveStatLabel, { color: colors.textSecondary }]}>DISTANCE LEFT</Text>

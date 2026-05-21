@@ -4,14 +4,23 @@ import { AuthContext } from "../context/AuthContext";
 import { CartContext } from "../context/CartContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
-import { useAppTheme } from "../context/ThemeContext";
+import Animated, { FadeInDown, FadeInUp, useAnimatedStyle, interpolateColor } from "react-native-reanimated";
+import { useAppTheme, lightTheme, darkTheme } from "../context/ThemeContext";
 
 export default function ProfileScreen({ navigation }: { navigation: any }) {
   const { logout } = useContext(AuthContext);
   const { activeOrders } = useContext(CartContext);
   const insets = useSafeAreaInsets();
-  const { colors, isDark } = useAppTheme();
+  const { colors, isDark, themeProgress } = useAppTheme();
+
+  const animatedContainerStyle = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
+      themeProgress.value,
+      [0, 1],
+      [lightTheme.colors.background, darkTheme.colors.background]
+    );
+    return { backgroundColor };
+  });
 
   const options = [
     { icon: "receipt-outline", title: "My Past Orders", subtitle: "View complete billing history", route: "Orders" },
@@ -24,11 +33,12 @@ export default function ProfileScreen({ navigation }: { navigation: any }) {
   const currentActive = activeOrders[0]; // Get most recent active order
 
   return (
-    <ScrollView 
-      style={[styles.container, { backgroundColor: colors.background }]} 
-      contentContainerStyle={{ paddingBottom: 100 }} 
-      showsVerticalScrollIndicator={false}
-    >
+    <Animated.View style={[styles.container, animatedContainerStyle]}>
+      <ScrollView 
+        style={{ flex: 1 }} 
+        contentContainerStyle={{ paddingBottom: 100 }} 
+        showsVerticalScrollIndicator={false}
+      >
       {/* Header Banner */}
       <View style={[styles.header, { paddingTop: Math.max(insets.top, 20) + 20 }]}>
         <Animated.View entering={FadeInDown.delay(100).springify()} style={styles.avatarBorder}>
@@ -100,6 +110,7 @@ export default function ProfileScreen({ navigation }: { navigation: any }) {
 
       <Text style={[styles.versionText, { color: colors.textSecondary }]}>Version 1.2.0 (Premium Orange Edition)</Text>
     </ScrollView>
+    </Animated.View>
   );
 }
 

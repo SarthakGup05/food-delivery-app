@@ -13,8 +13,8 @@ import {
 import { CartContext } from "../context/CartContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Animated, { FadeInDown } from "react-native-reanimated";
-import { useAppTheme } from "../context/ThemeContext";
+import Animated, { FadeInDown, useAnimatedStyle, interpolateColor } from "react-native-reanimated";
+import { useAppTheme, lightTheme, darkTheme } from "../context/ThemeContext";
 
 const { width } = Dimensions.get("window");
 
@@ -148,7 +148,16 @@ export default function RestaurantDetailScreen({
   const { addToCart, removeFromCart, getItemQuantity, cart } = useContext(CartContext);
   const { id, name = "Restaurant Palace", rating = "4.8", deliveryTime = "25 mins" } = route.params || {};
   const insets = useSafeAreaInsets();
-  const { isDark, colors } = useAppTheme();
+  const { isDark, colors, themeProgress } = useAppTheme();
+
+  const animatedContainerStyle = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
+      themeProgress.value,
+      [0, 1],
+      [lightTheme.colors.background, darkTheme.colors.background]
+    );
+    return { backgroundColor };
+  });
 
   const [searchText, setSearchText] = useState("");
   const [vegOnly, setVegOnly] = useState(false);
@@ -161,7 +170,7 @@ export default function RestaurantDetailScreen({
   const subtotal = calculateSubtotal();
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <Animated.View style={[styles.container, animatedContainerStyle]}>
       {/* Scrollable Content */}
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
@@ -265,7 +274,14 @@ export default function RestaurantDetailScreen({
 
         {/* Search and Filters inside Menu */}
         <View style={[styles.menuControlsCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-          <View style={[styles.searchBarContainer, { backgroundColor: colors.inputBg }]}>
+          <View style={[
+            styles.searchBarContainer, 
+            { 
+              backgroundColor: isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.03)", 
+              borderColor: isDark ? "rgba(255, 255, 255, 0.12)" : "rgba(0, 0, 0, 0.08)",
+              borderWidth: 1,
+            }
+          ]}>
             <Ionicons name="search" size={20} color={colors.textSecondary} style={{ marginRight: 8 }} />
             <TextInput
               style={[styles.searchInput, { color: colors.text }]}
@@ -415,7 +431,7 @@ export default function RestaurantDetailScreen({
           </TouchableOpacity>
         </View>
       )}
-    </View>
+    </Animated.View>
   );
 }
 

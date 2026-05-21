@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAppTheme } from "../context/ThemeContext";
+import { withTiming } from "react-native-reanimated";
 
 const popularSearches = ["Biryani", "Butter Chicken", "Paneer Tikka", "Momos", "Samosa", "Masala Dosa"];
 
@@ -16,7 +17,23 @@ const mockFoodItems = [
 export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const insets = useSafeAreaInsets();
-  const { colors, isDark } = useAppTheme();
+  const { colors, isDark, tabBarTranslateY } = useAppTheme();
+
+  const lastScrollY = useRef(0);
+
+  const handleScroll = (event: any) => {
+    const currentY = event.nativeEvent.contentOffset.y;
+    if (currentY > 50) {
+      if (currentY > lastScrollY.current) {
+        tabBarTranslateY.value = withTiming(120, { duration: 300 });
+      } else if (currentY < lastScrollY.current - 15) {
+        tabBarTranslateY.value = withTiming(0, { duration: 300 });
+      }
+    } else {
+      tabBarTranslateY.value = withTiming(0, { duration: 200 });
+    }
+    lastScrollY.current = currentY;
+  };
 
   const filteredItems = mockFoodItems.filter((item) =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -27,7 +44,18 @@ export default function SearchScreen() {
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Search Header */}
       <View style={[styles.header, { backgroundColor: colors.card, borderBottomColor: colors.border, paddingTop: Math.max(insets.top, 15) }]}>
-        <View style={[styles.searchBar, { backgroundColor: colors.inputBg }]}>
+        <View style={[
+          styles.searchBar, 
+          { 
+            backgroundColor: isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.03)", 
+            borderColor: isDark ? "rgba(255, 255, 255, 0.12)" : "rgba(0, 0, 0, 0.08)",
+            borderWidth: 1,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: isDark ? 0.2 : 0.02,
+            shadowRadius: 8,
+          }
+        ]}>
           <Ionicons name="search" size={20} color={colors.textSecondary} style={{ marginRight: 8 }} />
           <TextInput
             placeholder="Search food or restaurant..."
@@ -44,7 +72,12 @@ export default function SearchScreen() {
         </View>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent} 
+        showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
         {searchQuery === "" ? (
           <View>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>Popular Searches</Text>

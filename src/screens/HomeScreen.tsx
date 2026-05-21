@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -149,7 +149,75 @@ const initialRestaurants = [
 
 export default function HomeScreen({ navigation }: { navigation: any }) {
   const insets = useSafeAreaInsets();
-  const { isDark, toggleTheme, colors, themeProgress } = useAppTheme();
+  const { isDark, toggleTheme, colors, themeProgress, tabBarTranslateY } = useAppTheme();
+
+  // Dynamic time greeting state
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 15000); // Check every 15 seconds to keep the live clock accurate
+    return () => clearInterval(timer);
+  }, []);
+
+  const lastScrollY = useRef(0);
+
+  const handleScroll = (event: any) => {
+    const currentY = event.nativeEvent.contentOffset.y;
+    if (currentY > 50) {
+      if (currentY > lastScrollY.current) {
+        // Scroll Down -> Hide tab bar smoothly
+        tabBarTranslateY.value = withTiming(120, { duration: 300 });
+      } else if (currentY < lastScrollY.current - 15) {
+        // Scroll Up -> Show tab bar smoothly
+        tabBarTranslateY.value = withTiming(0, { duration: 300 });
+      }
+    } else {
+      // Force show at the top
+      tabBarTranslateY.value = withTiming(0, { duration: 200 });
+    }
+    lastScrollY.current = currentY;
+  };
+
+  const getGreetingDetails = (date: Date) => {
+    const hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const displayHours = hours % 12 || 12;
+    const timeString = `${displayHours}:${minutes} ${ampm}`;
+
+    let greeting = "Hello";
+    let subtext = "Ready for some tasty food?";
+    let icon = "sunny";
+    let iconColor = "#FFB800";
+
+    if (hours >= 5 && hours < 12) {
+      greeting = "Good morning";
+      subtext = "Kickstart your day with a healthy breakfast!";
+      icon = "sunny";
+      iconColor = "#FFB800";
+    } else if (hours >= 12 && hours < 17) {
+      greeting = "Good afternoon";
+      subtext = "Satisfy your afternoon cravings with a hearty lunch!";
+      icon = "partly-sunny";
+      iconColor = "#FF8C00";
+    } else if (hours >= 17 && hours < 22) {
+      greeting = "Good evening";
+      subtext = "Unwind after a busy day with a warm dinner!";
+      icon = "moon";
+      iconColor = "#FF6B35";
+    } else {
+      greeting = "Good night";
+      subtext = "Craving a late-night snack or sweet treat?";
+      icon = "moon-outline";
+      iconColor = "#7B2CBF";
+    }
+
+    return { greeting, subtext, icon, iconColor, timeString };
+  };
+
+  const { greeting, subtext, icon, iconColor, timeString } = getGreetingDetails(currentTime);
 
   // Animated background theme transition
   const animatedContainerStyle = useAnimatedStyle(() => {
@@ -272,11 +340,56 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
         </View>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        contentContainerStyle={styles.scrollContent}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
         
+        {/* Welcome & Time Greeting Card */}
+        <Animated.View 
+          entering={FadeInDown.delay(100).duration(800)} 
+          style={[
+            styles.greetingContainer, 
+            { 
+              backgroundColor: colors.card,
+              borderColor: colors.border,
+            }
+          ]}
+        >
+          <View style={styles.greetingHeaderRow}>
+            <View style={styles.greetingLeft}>
+              <View style={styles.greetingTitleRow}>
+                <Ionicons name={icon as any} size={22} color={iconColor} style={{ marginRight: 6 }} />
+                <Text style={[styles.greetingText, { color: colors.text }]}>
+                  {greeting}, <Text style={{ color: "#FF6B35", fontWeight: "900" }}>Sarthak</Text>!
+                </Text>
+              </View>
+              <Text style={[styles.greetingSubtext, { color: colors.textSecondary }]}>
+                {subtext}
+              </Text>
+            </View>
+            <View style={[styles.timeBadge, { backgroundColor: isDark ? "#1C1E26" : "#FFF5F1" }]}>
+              <Ionicons name="time" size={14} color="#FF6B35" style={{ marginRight: 4 }} />
+              <Text style={styles.timeBadgeText}>{timeString}</Text>
+            </View>
+          </View>
+        </Animated.View>
+
         {/* Orange Bite Search Bar */}
         <View style={[styles.searchContainer, { backgroundColor: colors.card }]}>
-          <View style={[styles.searchBar, { backgroundColor: colors.inputBg, borderColor: colors.border }]}>
+          <View style={[
+            styles.searchBar, 
+            { 
+              backgroundColor: isDark ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.03)", 
+              borderColor: isDark ? "rgba(255, 255, 255, 0.12)" : "rgba(0, 0, 0, 0.08)",
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: isDark ? 0.2 : 0.02,
+              shadowRadius: 8,
+            }
+          ]}>
             <Ionicons name="search" size={20} color="#FF6B35" style={{ marginRight: 8 }} />
             <TextInput
               style={[styles.searchInput, { color: colors.text }]}
@@ -333,7 +446,7 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
         </ScrollView>
 
         {/* "What's on your mind?" circular categories grid */}
-        <View style={styles.mindSection}>
+        <View style={[styles.mindSection, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>What's on your mind?</Text>
           <ScrollView
             horizontal
@@ -349,7 +462,7 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
                     onPress={() => handleCategoryPress(item.name)}
                     style={styles.mindCard}
                   >
-                    <View style={[styles.mindImgContainer, isActive && styles.mindActiveImgContainer]}>
+                    <View style={[styles.mindImgContainer, { backgroundColor: isDark ? colors.inputBg : "#F8F9FA" }, isActive && styles.mindActiveImgContainer]}>
                       <Image source={{ uri: item.image }} style={styles.mindImg} />
                     </View>
                     <Text style={[styles.mindName, { color: colors.textSecondary }, isActive && styles.mindActiveName]}>{item.name}</Text>
@@ -361,7 +474,7 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
         </View>
 
         {/* Top Brands for you Section */}
-        <View style={styles.topBrandsSection}>
+        <View style={[styles.topBrandsSection, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>Top Brands For You</Text>
           <ScrollView
             horizontal
@@ -1161,5 +1274,55 @@ const styles = StyleSheet.create({
     color: "#FF6B35",
     fontSize: 12,
     fontWeight: "800",
+  },
+  
+  /* Greeting Container Styles */
+  greetingContainer: {
+    marginHorizontal: 16,
+    marginTop: 16,
+    padding: 16,
+    borderRadius: 20,
+    borderWidth: 1,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.02,
+    shadowRadius: 10,
+    elevation: 2,
+  },
+  greetingHeaderRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  greetingLeft: {
+    flex: 1,
+    marginRight: 10,
+  },
+  greetingTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  greetingText: {
+    fontSize: 16,
+    fontWeight: "800",
+    letterSpacing: -0.3,
+  },
+  greetingSubtext: {
+    fontSize: 11,
+    fontWeight: "500",
+    marginTop: 2,
+  },
+  timeBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 12,
+  },
+  timeBadgeText: {
+    fontSize: 12,
+    fontWeight: "800",
+    color: "#FF6B35",
   },
 });
