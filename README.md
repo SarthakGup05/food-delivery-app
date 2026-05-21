@@ -1,56 +1,111 @@
-# Welcome to your Expo app 👋
+# 🍔 Premium Orange Edition - Food Delivery React Native App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A state-of-the-art Food Delivery App UI built with **React Native** and **Expo SDK 54**, showcasing advanced nested navigation architectures, custom **Reanimated spring physics**, dynamic time-aware greetings, and a beautiful translucent **Liquid Glass** layout system.
 
-## Get started
+---
 
-1. Install dependencies
+## 🌟 Premium UX & Design Highlights
 
-   ```bash
-   npm install
-   ```
+*   **Floating Liquid Glass Tab Bar:** A custom floating, translucent bottom navigation pill (`rgba(255, 255, 255, 0.72)` background) accented by a fine glass border overlay and elevated depth shadows.
+*   **Playful Focus Wobble Animation:** Active navigation tabs play a tactile 3D spring transition, scaling the icon by `1.15x`, sliding it up by `-4px`, and performing an elegant **8-degree spring rotation wobble** upon tap.
+*   **Slide-Away Scroll Integration:** Automatically hides the bottom tab bar smoothly off-screen when down-scrolling on main feeds, maximizing active real estate, and sliding back up with dead-zone jitter filters on scroll up.
+*   **Dynamic Time-Aware Greetings:** Integrated a live-running time greeting card ("Good morning, Sarthak!") displaying custom status indicators, real-time hours, and vector time badges matching the user's localized time.
+*   **Fluid Theme Background Fades:** All screen backgrounds (Home, Restaurant details, Profile) utilize native `themeProgress` values to transition between light and dark modes with organic fades rather than sharp jumps.
+*   **Compliance Vector Map:** Live delivery tracking routes with abstract blueprint grids that automatically invert to dark colors in dark mode.
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## 🛠️ Technology Stack
 
-In the output, you'll find options to open the app in a
+*   **Framework:** React Native & Expo SDK 54
+*   **Navigation:** React Navigation v7 Suite (`@react-navigation/native`, `bottom-tabs`, `drawer`, `native-stack`)
+*   **Animations:** React Native Reanimated v4 (Spring configurations, layout entry triggers)
+*   **Iconography:** Expo Vector Icons (Ionicons, custom shapes)
+*   **Storage:** React Native Async Storage (Persisting credentials and auth states across reloads)
+*   **Layout:** React Native Flexbox engine (Fully adaptive structures across multiple form factors)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 🗺️ Navigation Architecture
 
-## Get a fresh project
+The app adopts a professional, heavily nested React Navigation structure to demonstrate production-grade routing:
 
-When you're ready, run:
-
-```bash
-npm run reset-project
+```mermaid
+graph TD
+    Root[RootNavigator] -->|Unauthenticated| AuthStack[AuthNavigator Stack]
+    Root -->|Authenticated| TabNav[TabNavigator Bottom Tabs]
+    
+    AuthStack --> Login[LoginScreen]
+    AuthStack --> Onboarding[OnboardingScreen]
+    
+    TabNav --> HomeTab[HomeStackNavigator Stack]
+    TabNav --> Search[SearchScreen]
+    TabNav --> Orders[OrdersScreen]
+    TabNav --> Profile[ProfileDrawerNavigator Drawer]
+    
+    HomeTab --> Home[HomeScreen]
+    HomeTab --> RestaurantDetail[RestaurantDetailScreen]
+    HomeTab --> Cart[CartScreen]
+    HomeTab --> ActiveOrder[ActiveOrderScreen]
+    
+    Profile --> ProfileHome[ProfileScreen]
+    Profile --> MyOrders[MyOrdersScreen]
+    Profile --> Settings[SettingsScreen]
+    Profile --> Help[HelpScreen]
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### **Routing Mechanics:**
+1.  **Conditional Auth Guard:** The `RootNavigator` evaluates the mock credential token in `AuthContext` on startup. If missing, it renders the `AuthNavigator`. If present, it bypasses authorization entirely and renders `TabNavigator`.
+2.  **Home Stack Nesting:** The primary restaurant explorer, menu detail screens, checkout, and tracking routes are nested under the `HomeTab` Stack.
+3.  **Active Badge Tracking:** The `Orders` tab listens to contextual updates from `CartContext` and overlays an active badges counter displaying total cart contents.
+4.  **Automatic Tab Bar Hiding:** The tab navigator monitors active nested route names. When navigating to detailed menus (`RestaurantDetail`) or checkout (`Cart`), the bottom bar is seamlessly set to `display: 'none'`.
 
-### Other setup steps
+---
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## 🚀 How to Run Locally
 
-## Learn more
+### **1. Prerequisites**
+Ensure you have Node.js (v18+) and standard Expo CLI dependencies configured.
 
-To learn more about developing your project with Expo, look at the following resources:
+### **2. Clone & Install Dependencies**
+```bash
+# Navigate to project workspace
+cd food-delivery-app
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+# Install all package targets
+npm install
+```
 
-## Join the community
+### **3. Launch Development Server**
+```bash
+# Start the Expo bundler
+npm run start
+```
+*Press `i` for iOS Simulator, `a` for Android Emulator, or scan the QR code using the **Expo Go** app on your physical device.*
 
-Join our community of developers creating universal apps.
+---
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## 🔗 Deep Linking Configuration
+
+The app supports custom URL schemes (`foodapp://`) that enable users to jump directly from notifications or websites straight into specific restaurant detail panels:
+
+### **Testing on iOS Simulators:**
+```bash
+xcrun simctl openurl booted foodapp://restaurant/r1
+```
+
+### **Testing on Android Emulators:**
+```bash
+adb shell am start -W -a android.intent.action.VIEW -d "foodapp://restaurant/r1"
+```
+
+---
+
+## 🗺️ Wireframes & Diagrams
+*   **TLDraw Architecture Layout & Flows:** [Visit the online canvas layout](https://tldraw.com/) to explore structural wireframes and dynamic UI component maps.
+
+---
+
+## 📝 Key Engineering Assumptions
+1.  **Auth Persistence:** For simulation compliance, credentials are encrypted and stored inside localized `AsyncStorage` values. This ensures that even after a hard device reboot, the user remains logged in.
+2.  **Translucent Fallback:** In environments that do not support dynamic OS-level Liquid Glass, the bottom tabs degrade elegantly to high-fidelity semi-translucent RGBA backdrops, ensuring clean visual cross-platform compatibility.
